@@ -1,6 +1,8 @@
 <?php
+ini_set('default_charset', 'utf-8');
 //En este encontramos el que hará frente a la petición.
 require_once __DIR__."/Config/bootstrap.php";
+require_once HELPERS."/Helpers.php";
 $uri = parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH);
 $uri = explode('/', $uri);
 $reqMeth = strtolower($_SERVER['REQUEST_METHOD']);
@@ -10,17 +12,15 @@ $existe = false;
 /**
  * crear root;
  */
-model('Admin')->master_chief();
-/*echo '<pre>';
-print_r($uri);
-echo '</pre>';*/
+model('Admin')->insert('master_chief', ['pepe', 'pepe']);
+
 //Carga controladores Api
-$api_default = base64_encode('Permission Level 1 ');
+$api_default = base64_encode('Permission Level 0 ');
 if(isset($_REQUEST['api_key'])){
     $api_default = $_REQUEST['api_key'];
 }
 foreach($controllers as $contro){
-    $controlerName = str_replace('.php','', explode('/', $contro)[6]);
+    $controlerName = str_replace('.php', '', explode('/', $contro)[6]);
     if($controlerName === $uri[1]){
         $existe = true;
         require_once $contro;
@@ -28,7 +28,7 @@ foreach($controllers as $contro){
             $class = new $controlerName();
             $method =  $reqMeth.'_'.$uri[2];
             if(method_exists($class, $method) && is_callable($controlerName, $method)){
-                if($class->clasificateByKey($api_default)===$uri[1]){
+                if(keyValidation($api_default)==$uri[1]){
                     $class->getParams();
                     $class->setUriSegments($uri);
                     $class->$method();
@@ -44,7 +44,6 @@ foreach($controllers as $contro){
         }
     }
 }
-//Pdte de implementar la view en Public
 if(!$existe){
     echo json_encode([
         'status' => 400,

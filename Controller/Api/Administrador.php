@@ -2,7 +2,11 @@
 
 class Administrador extends BaseController{
    
-    //Métodos test
+      /**
+     * ====================
+     * =   MÉTODOS test   =
+     * ====================
+     */
     public function get_index (){
         echo json_encode([
             'status' => 200,

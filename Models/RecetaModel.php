@@ -20,8 +20,15 @@ class RecetaModel extends MainModel{
     }
 
     private function recetas(?array $params){
-        $sql = 'SELECT * FROM receta';
-        return $this->queryExec($sql, $params);
+        $sqlReceta = 'SELECT * FROM receta WHERE receta.id=?';
+        $resultado['receta'] = $this->queryExec($sqlReceta, $params); 
+        $sql = 'SELECT usuario.alias, usuario_receta.* 
+        FROM receta 
+        JOIN usuario_receta ON receta.id=usuario_receta.id_receta
+        JOIN usuario on usuario.id=usuario_receta.id_usuario
+        WHERE receta.id = ?';
+        $resultado['comentarios'] = $this->queryExec($sql, $params);
+        return $resultado;
     }
 
     private function receta_borrar(array $params){

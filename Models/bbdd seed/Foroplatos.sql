@@ -3,9 +3,9 @@ create database if not exists foroplatos;
 use foroplatos;
 
 create table if not exists usuario (
-	id int auto_increment primary key,
+	 id int auto_increment primary key,
     username varchar(20) unique,
-    pass varchar(6),
+    pass VARCHAR(200),
     alias varchar(20),
     nombre varchar(20),
     apellidos varchar(50),
@@ -17,7 +17,7 @@ create table if not exists usuario (
 ); 
 
 create table if not exists receta (
-	id int auto_increment primary key,
+	 id int auto_increment primary key,
     titulo varchar(50),
     ingredientes varchar(2000),
     pasos text,
@@ -26,7 +26,7 @@ create table if not exists receta (
     tipo enum ('Tradicional', 'SlowFood', 'Freidora sin aceite')
 );
 create table if not exists usuario_receta(
-	id_usuario int not null,
+	 id_usuario int not null,
     id_receta int not null,
     valoracion enum('1','2','3','4','5'),
     comentario text,
@@ -36,13 +36,14 @@ create table if not exists usuario_receta(
 );
 
 create table if not exists administrador(
-	id int auto_increment primary key,
+	 id int auto_increment primary key,
     username varchar(20) unique,
-	pass varchar(6),
+	 pass VARCHAR(200),
+	 alta tinyint(1) default 1,
     api_key varchar(100)
 );
 create table if not exists mensaje(
-	id int auto_increment primary key,
+	 id int auto_increment primary key,
     id_usuario int not null,
     texto text,
     estado enum('leido', 'no leido') default 'no leido',

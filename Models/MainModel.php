@@ -6,6 +6,7 @@ abstract class MainModel extends PDO{
     
     protected PDO $db;
 
+    //Fuerzo estos métodos abstractos para tener un mínimo orden en los controladores para que se vayan llamando sólos
     public abstract function insert(string $method, array $params);
     public abstract function update(string $method, array $params);
     public abstract function delete(string $method, array $params);
@@ -16,6 +17,25 @@ abstract class MainModel extends PDO{
             $this->db = new PDO('mysql:host='.HOST.';dbname='.DBNAME, USER, PASS);
         }catch(PDOException $e){
             echo json_encode(['status'=>500, 'message'=>$e->getMessage()]);
+        }
+    }
+
+    public function validarKey($params){
+        if($params['api_key']==''){
+            return false;
+        }else{
+            $result = null;
+            if($params[1]=='Usuarios'){
+                $result = model('User')->select('userByKey', [$params['api_key']]);
+            }
+            if($params[1]=='Administrador'){
+                $result = model('Admin')->select('userByKey', [$params['api_key']]);
+            }
+            if($result == null){
+                return false;
+            }else{
+                return true;
+            }
         }
     }
 
@@ -36,6 +56,22 @@ abstract class MainModel extends PDO{
             echo $e->getMessage();
             return ['status' => 'SOMETHING WAS WRONG', 'error' => $this->error($e->getMessage())];
         }
+    }
+
+    protected function obtenerPasword($username, $pass, $tabla){
+        $sql = "SELECT $tabla.pass FROM $tabla WHERE $tabla.username = ? and $tabla.alta=1";
+        $passHash = $this->queryExec($sql, [$username]);
+        if(isset($passHash[0])){
+            if(password_verify($pass, $passHash[0]->pass)){
+                return $passHash[0]->pass;
+            }
+        }
+        return '';
+    }
+
+    protected function obtenerApiKey($username, $tabla, $api){
+        $sql = "SELECT $tabla.api_key FROM $tabla WHERE $tabla.username = ?";
+        $api_key = $this->queryExec($sql, [$username]);
     }
     
     private function tipo($param) {

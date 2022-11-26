@@ -18,12 +18,15 @@ class AdminModel extends MainModel{
         return $this->$method($params);
     }
 
-    public function master_chief(){
+    public function master_chief($params){
         $sql = 'SELECT * FROM administrador';
-        if(empty($this->queryExec($sql))){
-            $api_key = $this->key_api_gen('pepe', 'pepe');
-            $sql = "INSERT INTO administrador (username, pass, api_key) values ('pepe','pepe',$api_key)";
-            $this->queryExec($sql, []);
+        $resultado = $this->queryExec($sql);
+        if(isset($resultado['status'])){
+            if(strpos($resultado['status'], 'DONE')>-1){
+                $api_key = $this->key_api_gen($params[0], $params[1]);
+                $sql = "INSERT INTO administrador (username, pass, api_key) values (?,?,?)";
+                $this->queryExec($sql, [$params[0], password_hash($params[1], PASSWORD_DEFAULT), $api_key]);
+            }
         }
     }
 
@@ -43,11 +46,14 @@ class AdminModel extends MainModel{
     }
 
     private function login($params){
+        $params[1]=$this->obtenerPasword($params[0], $params[1], 'administrador');
         $sql = 'SELECT * FROM administrador WHERE username = ? AND pass = ?';
         return $this->queryExec($sql, $params);
     }
 
     private function usuario($params){
+        $sql = 'DELETE FROM usuario_receta WHERE usuario_receta.id_usuario = ?';
+        $this->queryExec($sql, $params);
         $sql = 'DELETE FROM mensaje WHERE mensaje.id_usuario = ?';
         $this->queryExec($sql, $params);
         $sql = 'DELETE FROM usuario WHERE usuario.id = ?';
@@ -56,11 +62,6 @@ class AdminModel extends MainModel{
 
     private function leido($params){
         $sql = 'UPDATE mensaje SET estado = leido WHERE mensaje.id=?';
-        return $this->queryExec($sql, $params);
-    }
-
-    private function validarKey($params){
-        $sql = 'SELECT id FROM administrador WHERE nombre=? and pass=?';
         return $this->queryExec($sql, $params);
     }
 }
