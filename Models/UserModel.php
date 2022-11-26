@@ -88,6 +88,17 @@
             return $this->queryExec($sql, $params);
         }
 
+        private function usuario_borrar($params){            
+            $sql = 'SELECT id FROM usuario WHERE username = ?';
+            $id = ($this->queryExec($sql, $params))[0]->id;
+            $sql = 'DELETE FROM usuario_receta WHERE usuario_receta.id_usuario = ?';
+            $this->queryExec($sql, [$id]);
+            $sql = 'DELETE FROM mensaje WHERE id_usuario = ?';
+            $this->queryExec($sql, [$id]);
+            $sql = 'DELETE FROM usuario WHERE id = ?';
+            return $this->queryExec($sql, [$id]);
+        }
+
         private function valoraciones_por_receta($params){
             $sql = 'SELECT * FROM usuario_receta JOIN receta ON receta.id=usuario_receta.id_receta 
             WHERE receta.id = ?';

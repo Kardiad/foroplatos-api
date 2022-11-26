@@ -32,19 +32,21 @@ class RecetaModel extends MainModel{
     }
 
     private function receta_borrar(array $params){
+        $sql = 'DELETE FROM usuario_receta WHERE usuario_receta.id_receta=?';
+        $this->queryExec($sql, $params);
         $sql = 'DELETE FROM receta WHERE receta.id = ?';
         return $this->queryExec($sql, $params);
     }
 
     private function nueva_receta($params){
-        $sql = 'INSERT INTO receta (titulo, ingredientes, pasos, dificultad, tipo) 
-        VALUES (?,?,?,?,?)';
+        $sql = 'INSERT INTO receta (titulo, pasos, dificultad, tipo) 
+        VALUES (?,?,?,?)';
         return $this->queryExec($sql, $params);
     }
 
     private function modificar_receta($params){
         $sql = 'UPDATE receta SET '.$params['update'].' WHERE receta.id = ?';
-        return $this->queryExec($sql, [intval(explode('=', $params['id'])[1])]);
+        return $this->queryExec($sql, [intval($params['username'])]);
     }
 }
 

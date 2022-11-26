@@ -23,7 +23,7 @@ class AdminModel extends MainModel{
         $resultado = $this->queryExec($sql);
         if(isset($resultado['status'])){
             if(strpos($resultado['status'], 'DONE')>-1){
-                $api_key = $this->key_api_gen($params[0], $params[1]);
+                $api_key = $this->key_api_gen($params);
                 $sql = "INSERT INTO administrador (username, pass, api_key) values (?,?,?)";
                 $this->queryExec($sql, [$params[0], password_hash($params[1], PASSWORD_DEFAULT), $api_key]);
             }
@@ -36,6 +36,7 @@ class AdminModel extends MainModel{
 
     private function nuevo_administrador($params){
         array_push($params, $this->key_api_gen($params));
+        $params[1] = password_hash(substr($params[1], 0, 6), PASSWORD_DEFAULT);
         $sql = 'INSERT INTO administrador (username, pass, api_key) values (?,?,?)';
         return $this->queryExec($sql, $params);
     }
@@ -61,7 +62,7 @@ class AdminModel extends MainModel{
     }
 
     private function leido($params){
-        $sql = 'UPDATE mensaje SET estado = leido WHERE mensaje.id=?';
+        $sql = "UPDATE mensaje SET estado = 'leido' WHERE mensaje.id=?";
         return $this->queryExec($sql, $params);
     }
 }

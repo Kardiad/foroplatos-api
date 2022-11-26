@@ -50,10 +50,10 @@ class Usuarios extends BaseController{
      * =   MÉTODOS POST   =
      * ====================
      */
-    public function post_login(){
+    /*public function post_login(){
         $this->results = model('User')->select($this->segments[2], $this->params);
         $this->select_result($this->results, $this->segments[2]);
-    }
+    }*/
 
     public function post_mensaje(){
         //Funciona checked
