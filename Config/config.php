@@ -9,8 +9,8 @@ define('VIEWS', ROOT_PATH.'/Views');
 define('HELPERS', ROOT_PATH.'/Helpers');
 define('HTTP', $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 define('HOST', 'localhost');
-define('USER', 'kardiad01');
-define('PASS', 'kardiad01');
+define('USER', 'root');
+define('PASS', '');
 define('DBNAME', 'foroplatos');
 
 ?>
