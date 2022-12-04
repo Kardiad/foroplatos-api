@@ -22,15 +22,15 @@ create table if not exists receta (
     ingredientes varchar(2000),
     pasos text,
     dificultad enum('facil', 'intermedio', 'dificil', 'maestro'),
-    foto blob,
-    tipo enum ('Tradicional', 'SlowFood', 'Freidora sin aceite')
+    tipo enum ('Tradicional', 'SlowFood', 'Freidora sin aceite'),
+	 foto longblob,
+	formato varchar(20)
 );
 create table if not exists usuario_receta(
 	 id_usuario int not null,
     id_receta int not null,
     valoracion enum('1','2','3','4','5'),
     comentario text,
-    primary key (id_usuario, id_receta),
     foreign key(id_usuario) references usuario(id),
     foreign key(id_receta) references receta(id)
 );

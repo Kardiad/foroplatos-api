@@ -31,14 +31,14 @@ class AdminModel extends MainModel{
     }
 
     private function key_api_gen($params){
-        return base64_encode('Permission Level 2 = {"'.$params[0].'":"'.$params[1].'"}');
+        return (new Cifrado())->cifrar($params[0], $params[2]);
     }
 
     private function nuevo_administrador($params){
         array_push($params, $this->key_api_gen($params));
         $params[1] = password_hash(substr($params[1], 0, 6), PASSWORD_DEFAULT);
         $sql = 'INSERT INTO administrador (username, pass, api_key) values (?,?,?)';
-        return $this->queryExec($sql, $params);
+        //return $this->queryExec($sql, $params);
     }
 
     private function mensajes($params){
@@ -64,6 +64,19 @@ class AdminModel extends MainModel{
     private function leido($params){
         $sql = "UPDATE mensaje SET estado = 'leido' WHERE mensaje.id=?";
         return $this->queryExec($sql, $params);
+    }
+
+    private function borrar_mensaje($params){
+        $sql = 'DELETE FROM mensaje WHERE id = ?';
+        return $this->queryExec($sql, $params);
+    }
+
+    private function usuarios($params){
+        $sqlAdmins = 'SELECT * FROM administrador';
+        $resultado['admins'] =  $this->queryExec($sqlAdmins, $params);
+        $sqlUsuarios = 'SELECT * FROM usuario';
+        $resultado['usuarios'] =  $this->queryExec($sqlUsuarios, $params);
+        return $resultado;
     }
 }
 

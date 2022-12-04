@@ -20,25 +20,6 @@ abstract class MainModel extends PDO{
         }
     }
 
-    public function validarKey($params){
-        if($params['api_key']==''){
-            return false;
-        }else{
-            $result = null;
-            if($params[1]=='Usuarios'){
-                $result = model('User')->select('userByKey', [$params['api_key']]);
-            }
-            if($params[1]=='Administrador'){
-                $result = model('Admin')->select('userByKey', [$params['api_key']]);
-            }
-            if($result == null){
-                return false;
-            }else{
-                return true;
-            }
-        }
-    }
-
     public function queryExec($sql, array $params = []) {
         try{
             $stmt = $this->db->prepare($sql);
@@ -80,8 +61,6 @@ abstract class MainModel extends PDO{
                 return PDO::PARAM_STR;
             case "integer":
                 return PDO::PARAM_INT;
-            case "resource":
-                return PDO::PARAM_LOB;
         }
 
     }

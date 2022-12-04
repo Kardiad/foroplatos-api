@@ -18,7 +18,7 @@ class BaseController {
     */
 
     public function validkey(){
-        $decoded_api_key = base64_decode($this->api_key);
+        $decoded_api_key = (new Cifrado())->descifrar($this->api_key, $this->segments[3]);
         if(strpos($decoded_api_key, $this->segments[3])>-1){
             return true;
         }else{
@@ -44,7 +44,13 @@ class BaseController {
             if(strpos($this->segments[$x], '=', 0)==false){
                 $username = antihackChained($this->segments[$x]);
             }else{
-                $text = antihackChained(explode('=', $this->segments[$x])[0])."='".antihackChained(explode('=', $this->segments[$x])[1])."'";
+                if(strpos($this->segments[$x], 'pass', 0)>-1){
+                    //antihackChained(explode('=', $this->segments[$x])[1])
+                    //password_hash(substr(explode('=', $this->segments[$x])[1], 0, 6), PASSWORD_DEFAULT)
+                    $text = antihackChained(explode('=', $this->segments[$x])[0])."='".password_hash(substr(explode('=', $this->segments[$x])[1], 0, 6), PASSWORD_DEFAULT)."'";
+                }else{
+                    $text = antihackChained(explode('=', $this->segments[$x])[0])."='".antihackChained(explode('=', $this->segments[$x])[1])."'";
+                }
                 array_push($temp, $text);
             }
         }
@@ -53,7 +59,7 @@ class BaseController {
         return $params;
     }
 
-    public function select_result($results = '', $segmento){
+    public function select_result($results, $segmento){
         if(!empty($results)){
             if(isset($results['status'])){
                 echo json_encode(['status'=>404, 'message'=>$segmento.' NOK', 'results'=>'USER OR SOURCE NOT FOUND']);
@@ -84,6 +90,12 @@ class BaseController {
             $params = $_POST;
         }else{
             $params = $_REQUEST;
+        }
+        if(!empty($_FILES)){
+            $file = fopen($_FILES['foto']['tmp_name'], 'r');
+            $img = fread($file, $_FILES['foto']['size']);
+            array_push($params, $img);
+            array_push($params, $_FILES['foto']['type']);
         }
         if(isset($_REQUEST['api_key'])){
             $this->api_key = $_GET['api_key'];

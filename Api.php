@@ -1,5 +1,6 @@
 <?php
 ini_set('default_charset', 'utf-8');
+error_reporting(E_ALL);
 //En este encontramos el que hará frente a la petición.
 require_once __DIR__."/Config/bootstrap.php";
 require_once HELPERS."/Helpers.php";
@@ -15,17 +16,22 @@ if(isset($_SERVER['PATH_INFO'])){
     /**
      * crear root;
      */
-    model('Admin')->insert('master_chief', ['pepe', 'pepe']);
+
+    model('Admin')->insert('master_chief', ['pepe', 'pepe', 'Admin']);
 }
 
 //Carga controladores Api
-$api_default = base64_encode('Permission Level 0 ');
+$api_default = null;
 if(isset($_REQUEST['api_key'])){
     $api_default = $_REQUEST['api_key'];
 }
+$user = null;
+if(isset($uri[3])){
+    $user = $uri[3];
+}
 if($controllers!=null){
     foreach($controllers as $contro){
-        $controlerName = str_replace('.php', '', explode('/', $contro)[6]);
+        $controlerName = str_replace('.php', '', explode(DIRECTORY_SEPARATOR, $contro)[7]);
         if($controlerName === $uri[1]){
             $existe = true;
             require_once $contro;
@@ -33,7 +39,7 @@ if($controllers!=null){
                 $class = new $controlerName();
                 $method =  $reqMeth.'_'.$uri[2];
                 if(method_exists($class, $method) && is_callable($controlerName, $method)){
-                    if(keyValidation($api_default)==$uri[1]){
+                    if($api_default==null || (new Cifrado())->descifrar($api_default, $uri[1])!=''){
                         $class->getParams();
                         $class->setUriSegments($uri);
                         $class->$method();

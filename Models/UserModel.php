@@ -35,8 +35,7 @@
         }
 
         private function key_api_gen($params){
-            var_dump($params);
-            return base64_encode('Permission Level 1 = {"'.$params[0].'":"'.$params[7].'"}');
+            return (new Cifrado())->cifrar($params[0], $params[2]);
         }
 
         private function login($params){

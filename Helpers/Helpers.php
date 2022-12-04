@@ -16,28 +16,32 @@ function model($nombre){
     }
 }
 
-function keyValidation($key){
-    $key_decoded = base64_decode($key);
-    preg_match('/ \d /', $key_decoded, $assing);
-    if(isset($assing[0])){
-        if(intval($assing[0])==0){
-            return 'Inicio';
-        }
-        if(intval($assing[0])==1){
-            //Validad si el usuario de la api coincide con el de la api key. Tengo correo y nombre usuario.
-            return 'Usuarios';
-        }
-        if(intval($assing[0])==2){
-            //Lo mismo pero en el admin.
-            return 'Administrador';
-        }
-    }else{
-        echo json_encode(['error'=>401, 'error'=>'YOU DON`T USE API_KEY']);
-    }
-}
-
 function antihackChained ($string){
     return strip_tags(htmlspecialchars($string));
+}
+
+class Cifrado {
+    protected array $pass = [
+        'User' => 'Permission level 1',
+        'Admin'=>'Permission level 2 '
+    ];
+    protected String $method = 'aes-256-ctr';
+    protected array $iv=[
+        'User'=>'UserUserUserssss',
+        'Admin'=>'AdminAdminAdmins',
+    ];
+
+    public function cifrar($string, $tipo){
+        $tipo==='Usuarios'?$tipo='User':$tipo='Admin';
+        return base64_encode(openssl_encrypt($string, $this->method, $this->pass[$tipo], OPENSSL_RAW_DATA, $this->iv[$tipo]));
+    }
+
+    public function descifrar($string, $tipo){
+        $tipo==='Usuarios'?$tipo='User':$tipo='Admin';
+        return openssl_decrypt(base64_decode($string), $this->method, $this->pass[$tipo], OPENSSL_RAW_DATA, $this->iv[$tipo]);
+    }
+
+    
 }
 
 ?>

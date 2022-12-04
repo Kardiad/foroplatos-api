@@ -20,8 +20,11 @@ class RecetaModel extends MainModel{
     }
 
     private function recetas(?array $params){
-        $sqlReceta = 'SELECT * FROM receta WHERE receta.id=?';
+        $sqlReceta = 'SELECT id, titulo, ingredientes, pasos, dificultad, tipo, formato FROM receta WHERE receta.id=?';
         $resultado['receta'] = $this->queryExec($sqlReceta, $params); 
+        $sqlImagen = 'SELECT foto FROM receta WHERE receta.id=?';
+        //var_dump($this->queryExec($sqlImagen, $params)[0]['foto']);
+        $resultado['receta'][0]->foto = base64_encode($this->queryExec($sqlImagen, $params)[0]->foto);
         $sql = 'SELECT usuario.alias, usuario_receta.* 
         FROM receta 
         JOIN usuario_receta ON receta.id=usuario_receta.id_receta
@@ -39,8 +42,9 @@ class RecetaModel extends MainModel{
     }
 
     private function nueva_receta($params){
-        $sql = 'INSERT INTO receta (titulo, pasos, dificultad, tipo) 
-        VALUES (?,?,?,?)';
+        //var_dump('RecetaModel 42', $params);
+        $sql = 'INSERT INTO receta (titulo, ingredientes, pasos, dificultad, tipo, foto, formato) 
+        VALUES (?,?,?,?,?,?,?)';
         return $this->queryExec($sql, $params);
     }
 

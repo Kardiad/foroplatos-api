@@ -48,6 +48,14 @@ class Administrador extends BaseController{
         }
         $this->select_result($this->results, $this->segments[2]);
     }
+    public function get_usuarios(){
+        //Checked y funciona
+        if($this->validkey()){
+            $this->results = model('Admin')->select($this->segments[2], []);
+        }
+        $this->select_result($this->results, $this->segments[2]);
+    }
+
     /**
      * ====================
      * =   MÉTODOS POST   =
@@ -122,6 +130,12 @@ class Administrador extends BaseController{
         $this->generate_input($this->results, $this->segments[2]);
     }
 
+    public function delete_mensaje_borrar(){
+        if($this->validkey()){
+            $this->results = model('User')->delete($this->segments[2], [$this->segments[4]]);
+        }
+        $this->generate_input($this->results, $this->segments[2]);
+    }
 }
 
 ?>
