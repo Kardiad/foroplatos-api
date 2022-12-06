@@ -66,7 +66,7 @@ class Usuarios extends BaseController{
     public function post_valorar(){
          //Funciona checked
         if($this->validkey()==true){
-            $this->results = model('User')->insert($this->segments[2], $this->params);
+            $this->results = model('User')->insert($this->segments[2], [intval($this->params[0]), intval($this->params[1]), intval($this->params[2]), $this->params[3]]);
         }
         $this->generate_input($this->results, $this->segments[2]);
     }

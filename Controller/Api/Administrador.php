@@ -56,6 +56,13 @@ class Administrador extends BaseController{
         $this->select_result($this->results, $this->segments[2]);
     }
 
+    public function get_recetas_todas(){
+        if($this->validkey()){
+            $this->results = model('Receta')->select($this->segments[2], []);
+        }
+        $this->select_result($this->results, $this->segments[2]);
+    }
+
     /**
      * ====================
      * =   MÉTODOS POST   =
@@ -130,9 +137,16 @@ class Administrador extends BaseController{
         $this->generate_input($this->results, $this->segments[2]);
     }
 
+    public function delete_admin_borrar(){
+        if($this->validkey()){
+            $this->results = model('Admin')->delete($this->segments[2], [$this->segments[4]]);
+        }
+        $this->generate_input($this->results, $this->segments[2]);
+    }
+
     public function delete_mensaje_borrar(){
         if($this->validkey()){
-            $this->results = model('User')->delete($this->segments[2], [$this->segments[4]]);
+            $this->results = model('Admin')->delete($this->segments[2], [$this->segments[4]]);
         }
         $this->generate_input($this->results, $this->segments[2]);
     }

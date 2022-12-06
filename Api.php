@@ -10,7 +10,11 @@ if(isset($_SERVER['PATH_INFO'])){
     $uri = parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH);
     $uri = explode('/', $uri);
     $reqMeth = strtolower($_SERVER['REQUEST_METHOD']);
-    unset($uri[0]);
+    for($x=0; $x<=count($uri); $x++){
+        if($uri[$x]===''){
+            unset($uri[$x]);
+        }
+    }
     $controllers = glob(CONTROLLERS.'/Api/*.php');
     
     /**

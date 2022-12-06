@@ -38,7 +38,7 @@ class AdminModel extends MainModel{
         array_push($params, $this->key_api_gen($params));
         $params[1] = password_hash(substr($params[1], 0, 6), PASSWORD_DEFAULT);
         $sql = 'INSERT INTO administrador (username, pass, api_key) values (?,?,?)';
-        //return $this->queryExec($sql, $params);
+        return $this->queryExec($sql, $params);
     }
 
     private function mensajes($params){
@@ -66,8 +66,13 @@ class AdminModel extends MainModel{
         return $this->queryExec($sql, $params);
     }
 
-    private function borrar_mensaje($params){
+    private function mensaje_borrar($params){
         $sql = 'DELETE FROM mensaje WHERE id = ?';
+        return $this->queryExec($sql, $params);
+    }
+
+    private function admin_borrar($params){
+        $sql = 'DELETE FROM administrador WHERE id=?';
         return $this->queryExec($sql, $params);
     }
 
@@ -78,6 +83,7 @@ class AdminModel extends MainModel{
         $resultado['usuarios'] =  $this->queryExec($sqlUsuarios, $params);
         return $resultado;
     }
+
 }
 
 ?>

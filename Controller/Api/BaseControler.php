@@ -45,8 +45,6 @@ class BaseController {
                 $username = antihackChained($this->segments[$x]);
             }else{
                 if(strpos($this->segments[$x], 'pass', 0)>-1){
-                    //antihackChained(explode('=', $this->segments[$x])[1])
-                    //password_hash(substr(explode('=', $this->segments[$x])[1], 0, 6), PASSWORD_DEFAULT)
                     $text = antihackChained(explode('=', $this->segments[$x])[0])."='".password_hash(substr(explode('=', $this->segments[$x])[1], 0, 6), PASSWORD_DEFAULT)."'";
                 }else{
                     $text = antihackChained(explode('=', $this->segments[$x])[0])."='".antihackChained(explode('=', $this->segments[$x])[1])."'";

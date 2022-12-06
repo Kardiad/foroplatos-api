@@ -27,6 +27,12 @@ class Inicio extends BaseController{
      * =   MÉTODOS GET    =
      * ====================
      */
+
+    public function get_cantidad_recetas(){
+        $this->results = model('Receta')->select($this->segments[2], []);
+        $this->select_result($this->results, $this->segments[2]);
+    }
+    
     public function get_recetas(){
         //Checked funciona y vamos a hacer la cutrez de sacarlas con un bucle de 10
         $this->results = model('Receta')->select($this->segments[2], [intval($this->segments[3])]);

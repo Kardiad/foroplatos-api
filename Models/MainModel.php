@@ -26,12 +26,16 @@ abstract class MainModel extends PDO{
             for ($x = 0; $x < count($params); $x++) {
                 $stmt->bindParam($x+1, $params[$x], $this->tipo($params[$x]));
             }
-            $stmt->execute();
+            $status = $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
             if(!empty($result)){
                 return $result;
             }else{
-                return ['status' => 'INSERT, UPDATE OR DELETE DONE SUSSCCESFUL'];
+                if($status){
+                    return ['status' => 'INSERT, UPDATE OR DELETE DONE SUSSCCESFUL'];
+                }else{
+                    return ['status' => 'EROR: INSERT OR UPDATE OR DELETE FAILED'];
+                }
             }
         }catch(PDOException $e){
             echo $e->getMessage();

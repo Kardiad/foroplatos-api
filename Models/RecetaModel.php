@@ -19,6 +19,11 @@ class RecetaModel extends MainModel{
         return $this->$method($params);
     }
 
+    private function cantidad_recetas(?array $params){
+        $sql = 'SELECT id FROM receta';
+        return $this->queryExec($sql, $params);
+    }
+
     private function recetas(?array $params){
         $sqlReceta = 'SELECT id, titulo, ingredientes, pasos, dificultad, tipo, formato FROM receta WHERE receta.id=?';
         $resultado['receta'] = $this->queryExec($sqlReceta, $params); 
@@ -32,6 +37,11 @@ class RecetaModel extends MainModel{
         WHERE receta.id = ?';
         $resultado['comentarios'] = $this->queryExec($sql, $params);
         return $resultado;
+    }
+
+    private function recetas_todas(array $params){
+        $sql = 'SELECT id, titulo, dificultad, tipo FROM receta';
+        return $this->queryExec($sql, $params);
     }
 
     private function receta_borrar(array $params){
